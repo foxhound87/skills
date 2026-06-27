@@ -1,5 +1,5 @@
 ---
-name: nextjs-ios-theme-color
+name: ios-theme-color
 description: "Diagnose and fix Safari iOS rendering issues related to theme-color, Liquid Glass, safe areas, viewport, and browser chrome. Three-layer defense-in-depth for cross-browser toolbar color control."
 ---
 
