@@ -5,19 +5,19 @@ Agent skills for AI coding assistants, installable via [skills.sh](https://skill
 ## Install
 
 ```sh
-npx skills add github-foxhound87/skills --skill ios-theme-color
+npx skills add https://github.com/foxhound87/skills --skill ios-theme-color
 ```
 
 Install all skills:
 
 ```sh
-npx skills add github-foxhound87/skills --all
+npx skills add https://github.com/foxhound87/skills --all
 ```
 
 Install to a specific agent (e.g. opencode):
 
 ```sh
-npx skills add github-foxhound87/skills --skill ios-theme-color -a opencode
+npx skills add https://github.com/foxhound87/skills --skill ios-theme-color -a opencode
 ```
 
 ## Skills
