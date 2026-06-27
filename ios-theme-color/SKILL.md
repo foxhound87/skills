@@ -3,7 +3,7 @@ name: ios-theme-color
 description: "Diagnose and fix Safari iOS rendering issues related to theme-color, Liquid Glass, safe areas, viewport, and browser chrome. Three-layer defense-in-depth for cross-browser toolbar color control."
 ---
 
-# Skill: Next.js + Safari iOS UI Chrome Expert
+# Skill: Safari iOS Theme-Color Expert
 
 ## Mission
 
@@ -17,30 +17,15 @@ Diagnose and fix Safari iOS rendering issues related to:
 - safe areas
 - viewport behavior
 
-Always identify whether the issue is caused by CSS, Next.js, or Safari/WebKit before modifying code.
+Always identify whether the issue is caused by CSS, the framework, or Safari/WebKit before modifying code.
 
 ## Technical Context
 
-Default stack:
-- Next.js 14+
-- App Router
-- React
+Target environment:
 - Safari iOS
 - WebKit
 
-## Next.js Rules
-
-### Use the Viewport API
-
-Use:
-
-```ts
-export const viewport = {
-  themeColor: "#ffffff",
-};
-```
-
-Do not introduce `metadata.themeColor` for new implementations.
+Frame-agnostic — applies to any web stack (Next.js, Remix, Astro, vanilla HTML).
 
 ## Safari iOS Rules
 
@@ -53,8 +38,7 @@ Assume:
 - Runtime JavaScript updates to `<meta name="theme-color">` are ignored.
 - Even static theme-color may not determine the final toolbar appearance.
 
-This is expected WebKit behavior.
-It is NOT a Next.js limitation.
+This is expected WebKit behavior, not a framework limitation.
 
 ## CSS is now the source of truth
 
@@ -98,12 +82,10 @@ Solid backgrounds are preferred.
 
 No single API works across all Safari versions and browsers. The reliable solution combines three complementary layers:
 
-### Layer 1: Static viewport export (fallback initial value)
+### Layer 1: Static `<meta>` tag (fallback initial value)
 
-```ts
-export const viewport: Viewport = {
-  themeColor: "#dae2df",
-};
+```html
+<meta name="theme-color" content="#dae2df">
 ```
 
 Use a **single static value** without media queries. Multiple `prefers-color-scheme` media queries conflict with JS-driven updates. A single value gives JS a clean target to override.
@@ -145,7 +127,7 @@ JS updates to `theme-color` work reliably on Chrome/Android/Arc and older Safari
 
 | Layer | Targets | Mechanism |
 |-------|---------|-----------|
-| Static viewport | Initial HTML render | Single `<meta>` tag without media queries |
+| Static `<meta>` tag | Initial HTML render | Single `<meta>` tag without media queries |
 | `body::before` | Safari 26+ Liquid Glass | CSS class toggle on `<html>`, re-sampled by WebKit |
 | JS meta update | Chrome, Arc, Safari <26 | `setAttribute` driven by scroll/state change |
 
@@ -177,7 +159,7 @@ Before editing code determine whether the issue comes from:
 - color-scheme
 - dark mode
 - WebKit rendering bug
-- Next.js metadata
+- framework metadata
 
 Never assume theme-color is responsible.
 
@@ -231,14 +213,13 @@ Distinguish between: documented behavior, observed browser bugs, community worka
 
 Every solution must include:
 1. Root cause
-2. Whether it is: CSS issue, Next.js issue, WebKit limitation, or Safari bug
+2. Whether it is: CSS issue, framework issue, WebKit limitation, or Safari bug
 3. Confidence level
 4. Minimal code diff
 5. References when relying on WebKit behavior or Safari-specific limitations
 
 Prefer minimal, standards-based solutions.
 When dynamic toolbar colors are required, always use the three-layer defense-in-depth approach:
-1. Static viewport export (single value, no media queries)
+1. Static `<meta name="theme-color">` tag (single value, no media queries)
 2. `body::before` CSS-driven fixed element (Safari 26+)
 3. JS-driven `theme-color` update (Chrome, older Safari)
-Never rely on any single layer alone.
